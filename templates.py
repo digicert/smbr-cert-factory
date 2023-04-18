@@ -1,7 +1,5 @@
 from typing import NamedTuple
 
-from pkilint.cabf.smime import smime_constants
-from pkilint.itu import x520_name
 from pyasn1.codec.der.encoder import encode
 from pyasn1.type import char, univ
 from pyasn1_alt_modules import rfc5280
@@ -9,6 +7,7 @@ from pyasn1_alt_modules import rfc5280
 import key
 import tbs_builder
 import test_keys
+import smime_constants
 
 _RANDOM_LEI = 'AEYE00EKXESVZUUEBP67'
 
@@ -39,7 +38,7 @@ def _build_ee_org_rdns(extra_rdns=None):
         extra_rdns = []
 
     return tbs_builder.build_rdn_sequence([
-                                              (x520_name.id_at_organizationIdentifier,
+                                              (tbs_builder.id_at_organizationIdentifier,
                                                char.PrintableString(f'LEIXG-{_RANDOM_LEI}')),
                                               (rfc5280.id_at_organizationName,
                                                char.PrintableString('Acme Industries, Ltd.')),
@@ -51,7 +50,7 @@ def _build_ee_ja_org_rdns(extra_rdns=None):
         extra_rdns = []
 
     return tbs_builder.build_rdn_sequence([
-                                              (x520_name.id_at_organizationIdentifier,
+                                              (tbs_builder.id_at_organizationIdentifier,
                                                char.PrintableString(f'LEIXG-{_RANDOM_LEI}')),
                                               (rfc5280.id_at_organizationName, char.UTF8String('アクミ工業株式会社')),
                                           ] + extra_rdns)

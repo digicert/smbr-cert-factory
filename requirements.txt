@@ -1,5 +1,3 @@
 cryptography
 pyasn1-alt-modules
-git+ssh://git@github.com/digicert/pkilint.git#egg=pkilint
-
 pyasn1

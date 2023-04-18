@@ -3,13 +3,54 @@ from typing import Sequence, Tuple
 
 from cryptography import x509
 from cryptography.hazmat.primitives import hashes
-from pkilint import msft
-from pkilint.iso import lei
 from pyasn1.codec.der.encoder import encode
-from pyasn1.type import univ, char, useful
+from pyasn1.type import univ, char, useful, constraint, namedtype
 from pyasn1_alt_modules import rfc5280, rfc8398
 
 import key
+
+
+MAX = float('inf')
+
+
+id_at_organizationIdentifier = univ.ObjectIdentifier('2.5.4.97')
+
+
+class X520OrganizationIdentifier(univ.Choice):
+    pass
+
+
+X520OrganizationIdentifier.componentType = namedtype.NamedTypes(
+    namedtype.NamedType('teletexString', char.TeletexString()),
+    namedtype.NamedType('printableString', char.PrintableString()),
+    namedtype.NamedType('universalString', char.UniversalString()),
+    namedtype.NamedType('utf8String', char.UTF8String()),
+    namedtype.NamedType('bmpString', char.BMPString())
+)
+
+
+id_on_UserPrincipalName = univ.ObjectIdentifier('1.3.6.1.4.1.311.20.2.3')
+
+
+ISO_OID_ARC = univ.ObjectIdentifier('1.3.6.1.4.1.52266')
+
+
+id_ce_lei = ISO_OID_ARC + (1,)
+id_ce_role = ISO_OID_ARC + (2,)
+
+ub_leiRole_length = 100
+
+
+class Lei(char.PrintableString):
+    subtypeSpec = constraint.ValueSizeConstraint(20, 20)
+
+
+class Role(char.PrintableString):
+    subtypeSpec = constraint.ValueSizeConstraint(1, ub_leiRole_length)
+
+
+class UserPrincipalName(char.UTF8String):
+    subtypeSpec = constraint.ValueSizeConstraint(1, MAX)
 
 
 def build_rdn_sequence(rdns: Sequence[Tuple[univ.ObjectIdentifier, char.AbstractCharacterString]]):
@@ -142,15 +183,15 @@ def build_aia(ocsp_uris, issuer_ca_uris):
 
 
 def build_lei(lei_number):
-    ext_value = lei.Lei(lei_number)
+    ext_value = Lei(lei_number)
 
-    return build_extension(lei.id_ce_lei, ext_value)
+    return build_extension(id_ce_lei, ext_value)
 
 
 def build_lei_role(lei_role):
-    ext_value = lei.Role(lei_role)
+    ext_value = Role(lei_role)
 
-    return build_extension(lei.id_ce_role, ext_value)
+    return build_extension(id_ce_role, ext_value)
 
 
 def build_san(email_addresses, critical=False, add_upn=False, dir_name_rdns=None):
@@ -174,8 +215,8 @@ def build_san(email_addresses, critical=False, add_upn=False, dir_name_rdns=None
             gn = rfc5280.GeneralName()
 
             on = gn.getComponentByName('otherName')
-            on['type-id'] = msft.asn1.id_on_UserPrincipalName
-            on['value'] = msft.asn1.UserPrincipalName(email_address)
+            on['type-id'] = id_on_UserPrincipalName
+            on['value'] = UserPrincipalName(email_address)
 
             san.append(gn)
 
