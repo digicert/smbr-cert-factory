@@ -361,6 +361,6 @@ def create_ee_individual_legacy(ica: CertificateAndKeyPair):
     )
     ja_rdns = _build_ee_ja_individual_rdns(legacy_name=True)
 
-    return _create_ee(ica, smime_constants.ValidationLevel.INDIVIDUAL, smime_constants.Generation.MULTIPURPOSE,
+    return _create_ee(ica, smime_constants.ValidationLevel.INDIVIDUAL, smime_constants.Generation.LEGACY,
                       rdns, email_addresses, additional_ekus=[rfc5280.id_kp_clientAuth],
                       additional_dirname_rdns=ja_rdns)
