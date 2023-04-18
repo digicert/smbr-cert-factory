@@ -44,10 +44,13 @@ def build_extension(type_oid, pyasn1_value, critical=False):
     return ext
 
 
-def build_basic_constraints(is_ca):
+def build_basic_constraints(is_ca, path_len=None):
     bc = rfc5280.BasicConstraints()
 
     bc['cA'] = is_ca
+
+    if path_len is not None:
+        bc['pathLenConstraint'] = path_len
 
     return build_extension(rfc5280.id_ce_basicConstraints, bc, True)
 
@@ -240,7 +243,7 @@ def build_ica(subject_dn, subject_public_key, issuer_dn, issuer_public_key, exte
         issuer_public_key,
         issuer_dn, subject_dn,
         180,
-        [build_basic_constraints(True),
+        [build_basic_constraints(True, 0),
          build_keyusage('digitalSignature,cRLSign,keyCertSign'),
          build_authority_key_identifier(issuer_public_key.encoded),
          build_subject_key_identifier(subject_public_key.encoded)] + extensions

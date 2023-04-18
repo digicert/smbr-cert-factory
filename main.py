@@ -1,5 +1,7 @@
+import base64
 import os
 import shutil
+import urllib.parse
 
 from cryptography.hazmat.primitives import serialization
 from pyasn1_alt_modules import rfc5280
@@ -34,12 +36,26 @@ def _persist(cert_key_pair: templates.CertificateAndKeyPair, label: str):
     with open(cert_filename, 'wb') as f:
         f.write(crypto_cert.public_bytes(serialization.Encoding.PEM))
 
+    b64_escaped = urllib.parse.quote(base64.b64encode(der).decode())
+
+    link_title = label.title().replace('_', ' ')
+
+    print(f'* [{link_title}](https://understandingwebpki.com?cert={b64_escaped})')
+
 
 def _persist_crl(signed_crl: rfc5280.CertificateList, label: str):
     crl_filename = f'{label}.crl'
 
+    der = encode(signed_crl)
+
     with open(crl_filename, 'wb') as f:
-        f.write(encode(signed_crl))
+        f.write(der)
+
+    link_title = label.title().replace('_', ' ')
+
+    b64_escaped = urllib.parse.quote(base64.b64encode(der).decode())
+
+    # print(f'* [{link_title}](https://understandingwebpki.com?crl={b64_escaped})')
 
 
 shutil.rmtree('artifacts', True)
@@ -49,11 +65,11 @@ os.chdir('artifacts')
 
 root, root_crl = templates.create_root()
 _persist(root, 'root')
-_persist_crl(root_crl, 'root')
+_persist_crl(root_crl, 'root_crl')
 
 ica, ica_crl = templates.create_ica(root)
 _persist(ica, 'ica')
-_persist_crl(ica_crl, 'ica')
+_persist_crl(ica_crl, 'ica_crl')
 
 ee_mailbox_strict = templates.create_ee_mailbox_strict(ica)
 _persist(ee_mailbox_strict, 'mailbox_strict')
