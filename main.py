@@ -64,36 +64,36 @@ os.makedirs('artifacts', exist_ok=True)
 os.chdir('artifacts')
 
 root, root_crl = templates.create_root()
-_persist(root, 'root')
-_persist_crl(root_crl, 'root_crl')
+_persist(root, 'root_ca')
+_persist_crl(root_crl, 'root_ca_crl')
 
 ica, ica_crl = templates.create_ica(root)
-_persist(ica, 'ica')
-_persist_crl(ica_crl, 'ica_crl')
+_persist(ica, 'issuing_ca')
+_persist_crl(ica_crl, 'issuing_ca_crl')
 
 ee_mailbox_strict = templates.create_ee_mailbox_strict(ica)
-_persist(ee_mailbox_strict, 'mailbox_strict')
+_persist(ee_mailbox_strict, 'mailbox-validated_strict')
 
 ee_mailbox_multipurpose = templates.create_ee_mailbox_multipurpose(ica)
-_persist(ee_mailbox_multipurpose, 'mailbox_multipurpose')
+_persist(ee_mailbox_multipurpose, 'mailbox-validated_multipurpose')
 
 ee_org_strict = templates.create_ee_org_strict(ica)
-_persist(ee_org_strict, 'org_strict')
+_persist(ee_org_strict, 'organization-validated_strict')
 
 ee_org_multipurpose = templates.create_ee_org_multipurpose(ica)
-_persist(ee_org_multipurpose, 'org_multipurpose')
+_persist(ee_org_multipurpose, 'organization-validated_multipurpose')
 
 ee_sponsored_strict = templates.create_ee_sponsored_strict(ica)
-_persist(ee_sponsored_strict, 'sponsored_strict')
+_persist(ee_sponsored_strict, 'sponsored-validated_strict')
 
 ee_sponsored_multipurpose = templates.create_ee_sponsored_multipurpose(ica)
-_persist(ee_sponsored_multipurpose, 'sponsored_multipurpose')
+_persist(ee_sponsored_multipurpose, 'sponsored-validated_multipurpose')
 
 ee_individual_strict = templates.create_ee_individual_strict(ica)
-_persist(ee_individual_strict, 'individual_strict')
+_persist(ee_individual_strict, 'individual-validated_strict')
 
 ee_individual_multipurpose = templates.create_ee_individual_multipurpose(ica)
-_persist(ee_individual_multipurpose, 'individual_multipurpose')
+_persist(ee_individual_multipurpose, 'individual-validated_multipurpose')
 
 ee_individual_legacy = templates.create_ee_individual_legacy(ica)
-_persist(ee_individual_legacy, 'individual_legacy')
+_persist(ee_individual_legacy, 'individual-validated_legacy')

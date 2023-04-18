@@ -157,8 +157,8 @@ def create_ica(root_ca: CertificateAndKeyPair):
     rdns = _build_ca_rdns('Intermediate CA')
 
     extensions = [tbs_builder.build_certificate_policies([rfc5280.anyPolicy]),
-                  tbs_builder.build_crldp([_build_uri(_CRLDP_BASE_URI, 'root_crl.crl')]),
-                  tbs_builder.build_aia([], [_build_uri(_CA_ISSUERS_BASE_URI, 'root.der')]),
+                  tbs_builder.build_crldp([_build_uri(_CRLDP_BASE_URI, 'root_ca_crl.crl')]),
+                  tbs_builder.build_aia([], [_build_uri(_CA_ISSUERS_BASE_URI, 'root_ca.der')]),
                   tbs_builder.build_eku([rfc5280.id_kp_emailProtection, rfc5280.id_kp_clientAuth])]
 
     tbs_cert = tbs_builder.build_ica(rdns, rsa_key_pair.public_key,
@@ -187,8 +187,8 @@ def _create_ee(ica: CertificateAndKeyPair, validation_level: smime_constants.Val
     extensions = [
                      tbs_builder.build_certificate_policies(
                          [smime_constants.get_policy_oid(validation_level, generation)]),
-                     tbs_builder.build_crldp([_build_uri(_CRLDP_BASE_URI, 'ica_crl.crl')]),
-                     tbs_builder.build_aia([], [_build_uri(_CA_ISSUERS_BASE_URI, 'ica.der')]),
+                     tbs_builder.build_crldp([_build_uri(_CRLDP_BASE_URI, 'issuing_ca_crl.crl')]),
+                     tbs_builder.build_aia([], [_build_uri(_CA_ISSUERS_BASE_URI, 'issuing_ca.der')]),
                      tbs_builder.build_eku([rfc5280.id_kp_emailProtection] + additional_ekus),
                      tbs_builder.build_san(sans, add_upn=(rfc5280.id_kp_clientAuth in additional_ekus),
                                            dir_name_rdns=additional_dirname_rdns)
