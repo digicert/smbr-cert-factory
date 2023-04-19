@@ -7,11 +7,11 @@ This project generates example S/MIME certificates that comply with version 1.0 
 
 ## How do I run this on my local machine?
 
-1. Install Python 3
-2. Clone this repository (`git clone https://github.com/digicert/smbr-cert-factory.git`)
+1. Install Python 3.
+2. Clone this repository (`git clone https://github.com/digicert/smbr-cert-factory.git`).
 3. `cd` to the root of the cloned repository (`cd smbr-cert-factory`).
 4. Install required packages (`pip3 install -r requirements`).
-5. Run `python3 main.py`. Example certificates, CRLs, and private keys will be output to the `artifacts` directory
+5. Run `python3 main.py`. Example certificates, CRLs, and private keys will be output to the `artifacts` directory.
 
 ## The example S/MIME certificates
 
